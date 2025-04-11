@@ -1217,6 +1217,7 @@ class ReportCoordinator:
     def __init__(self, config):
         self.config = config
         self.year = config['year']
+        self.output_folder_path = config['output_folder_path']
         self.store_summary = StoreSummary(config)
         self.center_kitchen = CenterKitchen(config)
         self.summary_report = SummaryReport(config)
@@ -1250,41 +1251,11 @@ class ReportCoordinator:
         self.writer.write_main_table()
         self.writer.write_sales_summary_table(self.writer.wb)
         self.writer.write_simple_summary_table(self.writer.wb)
-        output_path = f"營業店年度營業額及各項比率計算({self.year}年)--.xlsx"
+        output_path = self.output_folder_path + f'/營業店年度營業額及各項比率計算({self.year}年).xlsx'
         self.writer.wb.save(output_path)
         print(f"✅ 完成！報表儲存到：{output_path}")
 
     def run_all(self):
         self.prepare_data()
         self.write_excel()
-
-
-
-if __name__ == "__main__":
-    
-    Config = {
-    'year' : 114,
-    'month' : 3,
-    'company_name' : '斑鳩的窩',  #聚椒   
-    #各分店資料
-    'each_area_path' : r'D:\斑鳩\營業店年度營業額及各項比率計算\斑鳩的窩各區域分店明細.xlsx', 
-    # 11401.xlsx 
-    'path_one' : r'D:\斑鳩\營業店表格\日結單\114年報表',    
-    # 薪資11401.xlsx 
-    'path_two' : r'D:/斑鳩/營業店/114年薪資檔',    
-    #年度損益表
-    'last_year_path' : r'D:/斑鳩/營業店/113年度/113年度損益表.xlsx',
-    'this_year_path' : r'D:/斑鳩/營業店/114年度/114年度損益表.xlsx',   
-    #114年度預算(全區)-簡化版
-    'path_four' : r'D:/斑鳩/營業店表格/預算及薪資編列/114預算/114年度預算(全區)-簡化版.xlsx',    
-    #月報表11401
-    'path_five' : r'D:/斑鳩/營業店/114年度',    
-    #檔案輸出位置
-    'output_folder_path' : r'D:\斑鳩\code'
-    }
-    
-    
-
-    coordinator = ReportCoordinator(Config)
-    coordinator.run_all()
 
