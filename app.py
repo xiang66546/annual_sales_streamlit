@@ -1,10 +1,13 @@
+# 這是打包好的新版 app.py
+
 import streamlit as st
 import tempfile
 import os
-from annual_sales import ReportCoordinator
+from annual_sales import run_with_config
 
-st.set_page_config(page_title="營業報表自動產生系統", page_icon="📊")
-st.title("📊 營業報表自動產生系統")
+st.set_page_config(page_title="營業報表自動產生系統", page_icon="\ud83d\udcca")
+
+st.title("\ud83d\udcca 營業報表自動產生系統")
 st.write("請依序上傳或填寫以下資料，然後點選「開始產生報表」")
 
 # --- 用戶輸入區 ---
@@ -22,7 +25,7 @@ last_year_file = st.file_uploader("請上傳 去年年度損益表 Excel", type=
 this_year_file = st.file_uploader("請上傳 今年年度損益表 Excel", type=['xlsx'])
 path_four_file = st.file_uploader("請上傳 預算表 Excel", type=['xlsx'])
 path_five_folder = st.text_input("請輸入 月報表 資料夾路徑")
-output_folder = st.text_input("請輸入 輸出檔案儲存資料夾路徑", value="/tmp")
+output_folder = "/tmp"
 
 # --- 處理上傳的檔案 ---
 temp_dir = tempfile.mkdtemp()
@@ -42,41 +45,34 @@ last_year_path = save_uploaded_file(last_year_file, "last_year.xlsx")
 this_year_path = save_uploaded_file(this_year_file, "this_year.xlsx")
 path_four = save_uploaded_file(path_four_file, "path_four.xlsx")
 
+# --- 整理 Config ---
+Config = {
+    'year': year,
+    'month': month,
+    'company_name': company_name,
+    'each_area_path': each_area_path,
+    'path_one': path_one_folder,
+    'path_two': path_two_folder,
+    'last_year_path': last_year_path,
+    'this_year_path': this_year_path,
+    'path_four': path_four,
+    'path_five': path_five_folder,
+    'output_folder_path': output_folder
+}
+
 # --- 按鈕：開始產生報表 ---
-if st.button("🚀 開始產生報表"):
+if st.button("\ud83d\ude80 開始產生報表"):
     with st.spinner("報表生成中，請稍候..."):
         try:
-            # 整理 Config
-            Config = {
-                'year': year,
-                'month': month,
-                'company_name': company_name,
-                'each_area_path': each_area_path,
-                'path_one': path_one_folder,
-                'path_two': path_two_folder,
-                'last_year_path': last_year_path,
-                'this_year_path': this_year_path,
-                'path_four': path_four,
-                'path_five': path_five_folder,
-                'output_folder_path': output_folder
-            }
-
-            # 建立報表物件並執行
-            coordinator = ReportCoordinator(Config)
-            coordinator.run_all()
-
-            # 假設你的檔案存在 output_folder_path 底下，用年份命名
-            output_file = f"營業店年度營業額及各項比率計算({year}年)--.xlsx"
-            output_path = os.path.join(output_folder, output_file)
-
+            output_path = run_with_config(Config)
             with open(output_path, "rb") as f:
-                st.success("✅ 報表產生成功！請下載：")
+                file_bytes = f.read()
+                st.success("✅ 報表產生成功！")
                 st.download_button(
-                    label="📥 下載報表Excel",
-                    data=f,
-                    file_name=output_file,
+                    label="\ud83d\udcc5 下載營業報表Excel",
+                    data=file_bytes,
+                    file_name=os.path.basename(output_path),
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 )
-
         except Exception as e:
-            st.error(f"產生失敗！錯誤訊息：{str(e)}")
+            st.error(f"❌ 報表產生失敗！錯誤訊息：{str(e)}")
