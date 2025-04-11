@@ -1288,38 +1288,3 @@ if __name__ == "__main__":
     coordinator = ReportCoordinator(Config)
     coordinator.run_all()
 
-
-#%%debug
-
-# s =   StoreReport(Config) 
-# s.build_StoreReport_all()
-# store_name_list, total_store_number = s._get_store_name() 
-# all_data_dict = s.get_all_excel_data_to_dict()
-# data_dict = s.data_dict
-# final_data_dict, final_df = s.cal_other_index_value()
-
-# c = StoreSummary(Config)
-# c.build_StoreSummary_all()
-# total_df = c.total_df
-# concat_all_type_store_df = c.concat_all_type_store_df
-# final_data_dict = c.final_data_dict  
-# all_type_sum_dict = c.all_type_sum_dict
-# same_period_profit_dict=c.same_period_profit_dict
-# rent_df = c.rent_df
-# total_df = c.total_df
-
-# concat_all_type_store_df.index
-
-
-# a = CenterKitchen(Config)
-# a.total_df = c.total_df
-# a.build_CenterKitchen_all()      # 先建好每家店的 DataFrame
-# sum_include_ck_df = a.sum_include_ck_df
-# center_kitchen_df = a.center_kitchen_df
-
-# ss=SummaryReport(Config)
-# store_number_list = ss._read_store_number()
-# ss.build_StoreReport_all()      # 先建好每家店的 DataFrame
-# ss.cal_all_store() 
-# summary_df = ss.get_summary_df()
-# summary_df, df_part1, df_part2 = ss.cal_total_specicfy_month_sum_dict()
